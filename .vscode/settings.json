@@ -1,0 +1,31 @@
+{
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "[prisma]": {
+        "editor.defaultFormatter": "Prisma.prisma"
+    },
+    "cSpell.words": [
+        "APPLICATIONID",
+        "AUTHURL",
+        "Batchfile",
+        "CLIENTID",
+        "CLIENTSECRET",
+        "debtbot",
+        "DELETEURL",
+        "GUILDID",
+        "Jsonify",
+        "Linkconfirmation",
+        "mysqld",
+        "Myxogastria",
+        "nyokinyokinyki",
+        "RDBMS",
+        "REGISTERURL",
+        "slashcommands",
+        "WEBAPIURL"
+    ],
+    "workbench.colorCustomizations": {
+        "activityBar.foreground": "#00afc2",
+        "activityBarBadge.background": "#008a99",
+        "activityBarBadge.foreground": "#ffffff"
+    }
+}
