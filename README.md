@@ -16,10 +16,6 @@
 -   ORM: Prisma
 -   RDBMS: PostgreSQL
 
-## website
-
--   Astro で作成
-
 > [!CAUTION]
 > プログラムの中に、`console.log()`するべきでない内容を`console.log()`している可能性があります。実際にこのプログラムを使用する際は、`console.log()`を全て消してください。
 
@@ -44,7 +40,7 @@ flowchart LR;
 
 -   yarn
 
-### `.env`ファイルの生成
+### 環境変数を書くファイルの生成
 
 ### Windows ユーザー
 
@@ -79,45 +75,21 @@ WEBAPIURL = ""
 
 ```
 
-### backend に置く`.env`ファイルの中身
+### backend に置く`.dev.vars`ファイルの中身
 
 > [!NOTE]
 > 空の文字列(または数字)に適切な情報を入力してください。
 
-> [!NOTE]
-> IPADDRESS と PORT は、適宜変えてください。
-
 > [!CAUTION]
-> 　`.env`ファイルに書く内容は、外部に漏れてはいけない内容を含むので、必ず`.gitignore`ファイルに`.env`を書いてください。
+> 　`.dev.vars`ファイルに書く内容は、外部に漏れてはいけない内容を含むので、必ず`.gitignore`ファイルに`.dev.vars`を書いてください。
 
 ```.env
-IPADDRESS = "127.0.0.1"
-PORT = "3000"
 DOMAIN = ""
 CLIENTID = ""
 CLIENTSECRET = ""
 GUILDID = ""
-
-#以下はPrismaによって自動生成されるので、省略
-# This was inserted by ~
-
-
-```
-
-### ルートのディレクトリ に置く`.env`ファイルの中身
-
-> [!NOTE]
-> 空の文字列(または数字)に適切な情報を入力してください。
-
-> [!CAUTION]
-> 　`.env`ファイルに書く内容は、外部に漏れてはいけない内容を含むので、必ず`.gitignore`ファイルに`.env`を書いてください。
-
-```.env
-DATABASE_URL=
-MYSQL_ROOT_PASSWORD=
-MYSQL_DATABASE=
-TZ=
-CLOUDFLARE_TUNNEL_TOKEN=
+DATABASE_URL = ""
+DIRECT_URL = ""
 ```
 
 ## DebtBot のテーブル設計
@@ -185,6 +157,8 @@ docker compose up -d
 ```
 
 ### 参考文献
+
+https://zenn.dev/kameoncloud/articles/99d3ed9d5ce4fd
 
 https://qiita.com/Mijinko/items/df3d2e1f90dbed5a4019
 
