@@ -5,6 +5,7 @@
         "init:prisma": "ts-node-dev --project src/db/tsconfig.json src/db/src/init.ts",
         "dev:prisma:user": "ts-node-dev --project src/db/tsconfig.json src/db/src/user.ts",
         "dev:prisma:debt": "ts-node-dev --project src/db/tsconfig.json src/db/src/debt.ts",
+        "check:prisma": "ts-node-dev --project src/db/tsconfig.json src/db/src/checkData/index.ts",
         "migrate": "prisma migrate dev --name init && prisma generate"
     },
     "dependencies": {
