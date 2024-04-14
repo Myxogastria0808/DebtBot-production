@@ -1,0 +1,10 @@
+name = "debtbot"
+compatibility_date = "2023-12-01"
+
+# [vars]
+# DOMAIN=""
+# CLIENTID=""
+# CLIENTSECRET=""
+# GUILDID=""
+# DATABASE_URL=""
+# DIRECT_URL=""

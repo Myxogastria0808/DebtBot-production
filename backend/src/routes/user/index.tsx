@@ -1,26 +1,17 @@
 import { Hono } from 'hono';
-import { checkIsString } from '../../types/env';
-import dotenv from 'dotenv';
 import { meta } from '../../types/meta';
 import { tokenDataType, discordDataType } from '../../types/discord';
 import { registerUser, userExistValidator, deleteUser } from '../../db/src/user';
 import { Base, Authentication } from '../../components';
 import { deleteUserResultType } from '../../db/types';
 
-dotenv.config();
+type Bindings = {
+    DOMAIN: string;
+    CLIENTID: string;
+    CLIENTSECRET: string;
+};
 
-const router = new Hono();
-
-const port: string = checkIsString(process.env.PORT);
-const ipaddress: string = checkIsString(process.env.IPADDRESS);
-const domain: string | undefined = process.env.DOMAIN;
-const registerRedirectUrl: string =
-    typeof domain !== 'undefined' ? `https://${domain}/user/register` : `http://${ipaddress}:${port}/user/register`;
-const deleteRedirectUrl: string =
-    typeof domain !== 'undefined' ? `https://${domain}/user/delete` : `http://${ipaddress}:${port}/user/delete`;
-
-const clientId: string = checkIsString(process.env.CLIENTID);
-const clientSecret: string = checkIsString(process.env.CLIENTSECRET);
+const router = new Hono<{ Bindings: Bindings }>();
 
 router.get('/register', async (c) => {
     //* ***************************************//
@@ -29,8 +20,6 @@ router.get('/register', async (c) => {
     //* ***************************************//
     if (typeof code == 'undefined') {
         //codeが取得できなかった場合
-        console.log('========================================');
-        console.log('/user/register');
         return c.html(
             <>
                 <Base meta={meta}>
@@ -40,15 +29,14 @@ router.get('/register', async (c) => {
         );
     } else {
         try {
-            //* ***************************************//
-            const body = `client_id=${clientId}&client_secret=${clientSecret}&grant_type=authorization_code&code=${code}&redirect_uri=${registerRedirectUrl}`;
+            const body: string = `client_id=${c.env.CLIENTID}&client_secret=${c.env.CLIENTSECRET}&grant_type=authorization_code&code=${code}&redirect_uri=https://${c.env.DOMAIN}/user/register`;
             //トークンを取得する
-            const tokenData = await fetch('https://discordapp.com/api/oauth2/token', {
+            const tokenData: Response = await fetch('https://discordapp.com/api/oauth2/token', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body,
             });
-            const IncludesToken: tokenDataType = await tokenData.json();
+            const IncludesToken: tokenDataType = (await tokenData.json()) as tokenDataType;
             const token: string = IncludesToken.access_token;
             //* ***************************************//
             //ユーザーIDを取得する
@@ -56,7 +44,7 @@ router.get('/register', async (c) => {
                 method: 'GET',
                 headers: { Authorization: `Bearer ${token}` },
             });
-            const discord: discordDataType = await discordData.json();
+            const discord: discordDataType = (await discordData.json()) as discordDataType;
 
             //TODO
             console.log(body);
@@ -107,8 +95,6 @@ router.get('/delete', async (c) => {
     //* ***************************************//
     if (typeof code == 'undefined') {
         //codeが取得できなかった場合
-        console.log('========================================');
-        console.log('/user/delete');
         return c.html(
             <>
                 <Base meta={meta}>
@@ -119,14 +105,14 @@ router.get('/delete', async (c) => {
     } else {
         try {
             //* ***************************************//
-            const body = `client_id=${clientId}&client_secret=${clientSecret}&grant_type=authorization_code&code=${code}&redirect_uri=${deleteRedirectUrl}`;
+            const body = `client_id=${c.env.CLIENTID}&client_secret=${c.env.CLIENTSECRET}&grant_type=authorization_code&code=${code}&redirect_uri=https://${c.env.DOMAIN}/user/delete`;
             //トークンを取得する
             const tokenData = await fetch('https://discordapp.com/api/oauth2/token', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body,
             });
-            const IncludesToken: tokenDataType = await tokenData.json();
+            const IncludesToken: tokenDataType = (await tokenData.json()) as tokenDataType;
             const token: string = IncludesToken.access_token;
             //* ***************************************//
             //ユーザーIDを取得する
@@ -134,7 +120,7 @@ router.get('/delete', async (c) => {
                 method: 'GET',
                 headers: { Authorization: `Bearer ${token}` },
             });
-            const discord: discordDataType = await discordData.json();
+            const discord: discordDataType = (await discordData.json()) as discordDataType;
             //* ***************************************//
             //* ***************************************//
             //ユーザーが存在するかどうかチェック

@@ -1,4 +1,4 @@
-import { FC, memo } from 'hono/jsx';
+import { FC } from 'hono/jsx';
 import { Meta } from '../../types/meta';
 import { html } from 'hono/html';
 import { Style } from 'hono/css';

@@ -6,12 +6,4 @@ const checkIsString = (constant: string | undefined): string => {
     }
 };
 
-const checkIsStringAndParseInt = (constant: string | undefined): number => {
-    if (typeof constant === 'string') {
-        return parseInt(constant);
-    } else {
-        throw new Error('This type of constant is undefined. You have to set the number value in this constant.');
-    }
-};
-
-export { checkIsString, checkIsStringAndParseInt };
+export { checkIsString };

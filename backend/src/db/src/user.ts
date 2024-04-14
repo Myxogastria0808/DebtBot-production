@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client/edge';
 import { DebtDataType, deleteUserResultType, UserDataType } from 'types';
 
 const prisma = new PrismaClient();

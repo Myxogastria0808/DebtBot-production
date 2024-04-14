@@ -10,6 +10,7 @@
         "Batchfile",
         "CLIENTID",
         "CLIENTSECRET",
+        "cockroachdb",
         "debtbot",
         "DELETEURL",
         "GUILDID",

@@ -1,5 +1,5 @@
 import { FC } from 'hono/jsx';
-import { css, Style } from 'hono/css';
+import { css } from 'hono/css';
 
 const containerClass = css`
     margin: 60px auto 0px auto;

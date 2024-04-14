@@ -6,14 +6,17 @@ type UserDataType = {
 };
 
 type DebtDataType = {
-    id: number;
+    cockroachdbId: bigint;
     money: number;
     isPayOff: boolean;
     createdAt: Date;
     updatedAt: Date;
     lendId: string;
     borrowId: string;
+    id: bigint;
 };
+
+type DebtRecordIdType = {};
 
 type AmountDataType = { lendId: string; amount: number }[];
 

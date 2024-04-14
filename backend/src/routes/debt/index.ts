@@ -1,15 +1,13 @@
 import { Hono } from 'hono';
-import dotenv from 'dotenv';
 import { userExistValidator } from '../../db/src/user';
 import { changePayOff, checkDebtAmount, createDebt } from '../../db/src/debt';
 import { AmountDataType } from '../../db/types';
-import { checkIsString } from '../../types/env';
 
-dotenv.config();
+type Bindings = {
+    GUILDID: string;
+};
 
-const router = new Hono();
-
-const configGuildId = checkIsString(process.env.GUILDID);
+const router = new Hono<{ Bindings: Bindings }>();
 
 router.post('/create', async (c) => {
     const authorizationData: string | undefined = c.req.header('Authorization');
@@ -18,7 +16,7 @@ router.post('/create', async (c) => {
         const discordId: string = splitAuthorizationData[0];
         const guildId: string = splitAuthorizationData[1];
         const { lend, money, borrow } = await c.req.json<{ lend: string; money: number; borrow: string }>();
-        if ((await userExistValidator(discordId)) && guildId === configGuildId) {
+        if ((await userExistValidator(discordId)) && guildId === c.env.GUILDID) {
             const debtId: number = await createDebt(money, lend, borrow);
             return c.json({ authorization: 'You are authorized!', debtId: debtId });
         } else {
@@ -36,7 +34,7 @@ router.patch('/pay-off', async (c) => {
         const discordId: string = splitAuthorizationData[0];
         const guildId: string = splitAuthorizationData[1];
         const { debtId } = await c.req.json<{ debtId: number }>();
-        if ((await userExistValidator(discordId)) && guildId === configGuildId) {
+        if ((await userExistValidator(discordId)) && guildId === c.env.GUILDID) {
             await changePayOff(debtId);
             return c.json({ authorization: 'You are authorized!', debtId: debtId });
         } else {
@@ -54,7 +52,7 @@ router.post('/amount', async (c) => {
         const discordId: string = splitAuthorizationData[0];
         const guildId: string = splitAuthorizationData[1];
         const { discordUserId } = await c.req.json<{ discordUserId: string }>();
-        if ((await userExistValidator(discordId)) && guildId === configGuildId) {
+        if ((await userExistValidator(discordId)) && guildId === c.env.GUILDID) {
             const amount: AmountDataType = await checkDebtAmount(discordUserId);
             return c.json({ authorization: 'You are authorized!', amount });
         } else {

@@ -1,3 +1,13 @@
 node_modules
-.env
-migration
+dist
+.wrangler
+.dev.vars
+
+# Change them to your taste:
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+bun.lockb
+
+#init.ts
+src/db/src/init.ts

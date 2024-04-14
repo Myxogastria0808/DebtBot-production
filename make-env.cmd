@@ -7,17 +7,6 @@ rem 参考サイト: https://setips.net/bat/bat-exist/
 rem 参考サイト: https://note.alhinc.jp/n/n828e5d7a417f
 rem 参考サイト: https://qiita.com/tera1707/items/e8c5cacac28b2cd7598f
 
-if not exist %~dp0.env (
-    type nul > ./.env
-    echo DATABASE_URL=>> ./.env
-    echo MYSQL_ROOT_PASSWORD=>> ./.env
-    echo MYSQL_DATABASE=>> ./.env
-    echo TZ=>> ./.env
-    echo CLOUDFLARE_TUNNEL_TOKEN=>> ./.env
-) else (
-    echo \.env is already exits.
-)
-
 if not exist %~dp0bot\.env (
     type nul > ./bot/.env
     echo TOKEN = "">> ./bot/.env
@@ -30,15 +19,14 @@ if not exist %~dp0bot\.env (
     echo bot\.env is already exits.
 )
 
-if not exist %~dp0backend\.env (
-    type nul > ./backend/.env
-    echo IPADDRESS = "127.0.0.1">> ./backend/.env
-    echo PORT = "8787">> ./backend/.env
-    echo DOMAIN = "">> ./backend/.env
-    echo CLIENTID = "">> ./backend/.env
-    echo CLIENTSECRET = "">> ./backend/.env
-    echo GUILDID = "">> ./backend/.env
+if not exist %~dp0backend\.dev.vars (
+    type nul > ./backend/.dev.vars
+    echo DOMAIN = "">> ./backend/.dev.vars
+    echo CLIENTID = "">> ./backend/.dev.vars
+    echo CLIENTSECRET = "">> ./backend/.dev.vars
+    echo GUILDID = "">> ./backend/.dev.vars
+    echo DATABASE_URL = "">> ./backend/.dev.vars
+    echo DIRECT_URL = "">> ./backend/.dev.vars
 ) else (
-    echo backend\.env is already exits.
+    echo backend\.dev.vars is already exits.
 )
-

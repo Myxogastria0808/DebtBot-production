@@ -1,0 +1,9 @@
+version: '3.8'
+services:
+    debtbot-bot:
+        image: debtbot-bot
+        container_name: debtbot-bot
+        build:
+            context: ./bot
+            dockerfile: ./bot.Dockerfile
+        tty: true

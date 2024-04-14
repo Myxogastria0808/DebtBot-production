@@ -1,41 +1,74 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client/edge';
 import { AmountDataType, DebtDataType } from 'types';
 
 const prisma = new PrismaClient();
 
 const createDebt = async (money: number, lendId: string, borrowId: string): Promise<number> => {
-    const debt: DebtDataType = await prisma.debt.create({
-        data: {
-            money,
-            isPayOff: false,
-            lendId,
-            borrowId,
+    const debtRecordId = await prisma.debtRecordId.findMany({
+        where: {
+            tag: 'LATEST',
         },
     });
-    return debt.id;
+    if (debtRecordId.length === 1) {
+        await prisma.debtRecordId.update({
+            where: {
+                cockroachdbId: debtRecordId[0].cockroachdbId,
+            },
+            data: {
+                tag: 'OLD',
+            },
+        });
+        await prisma.debtRecordId.create({
+            data: {
+                id: Number(debtRecordId[0].id) + 1,
+                tag: 'LATEST',
+            },
+        });
+        await prisma.debt.create({
+            data: {
+                id: Number(debtRecordId[0].id) + 1,
+                money,
+                isPayOff: false,
+                lendId,
+                borrowId,
+            },
+        });
+        return Number(debtRecordId[0].id) + 1;
+    } else {
+        throw '`tag: LATEST` have to exits only one.';
+    }
 };
 
-const changePayOff = async (id: number) => {
-    await prisma.debt.update({
+const changePayOff = async (id: number): Promise<void> => {
+    const debtRecordId = await prisma.debtRecordId.findMany({
         where: {
-            id,
-        },
-        data: {
-            isPayOff: true,
+            tag: 'LATEST',
         },
     });
+    if (debtRecordId.length === 1) {
+        await prisma.debt.update({
+            where: {
+                id,
+            },
+            data: {
+                isPayOff: true,
+            },
+        });
+    } else {
+        throw '`tag: LATEST` have to exits only one.';
+    }
 };
 
-const cancelPayOff = async (id: number) => {
-    await prisma.debt.update({
-        where: {
-            id,
-        },
-        data: {
-            isPayOff: false,
-        },
-    });
-};
+// const cancelPayOff = async (id: number) => {
+//     await prisma.debt.update({
+//         where: {
+//             id,
+//         },
+//         data: {
+//             isPayOff: false,
+//         },
+//     });
+// };
 
 const checkDebtAmount = async (discordId: string): Promise<AmountDataType> => {
     const debt: DebtDataType[] = await prisma.debt.findMany({
@@ -60,12 +93,12 @@ const checkDebtAmount = async (discordId: string): Promise<AmountDataType> => {
     return amount;
 };
 
-const deleteDebt = async (id: number) => {
-    await prisma.debt.delete({
-        where: {
-            id,
-        },
-    });
-};
+// const deleteDebt = async (id: number) => {
+//     await prisma.debt.delete({
+//         where: {
+//             id,
+//         },
+//     });
+// };
 
 export { createDebt, changePayOff, checkDebtAmount };

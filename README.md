@@ -1,4 +1,8 @@
-# DebtBot
+# DebtBot のリリース時に使用するレポジトリ
+
+※ DebtBot のレポジトリは、以下のリンク
+
+[https://github.com/Myxogastria0808/DebtBot](https://github.com/Myxogastria0808/DebtBot)
 
 ## bot
 
@@ -10,7 +14,7 @@
 -   使用言語: TypeScript
 -   WebAPI: Hono
 -   ORM: Prisma
--   RDBMS: MySQL
+-   RDBMS: PostgreSQL
 
 ## website
 
@@ -23,13 +27,15 @@
 
 ```mermaid
 flowchart LR;
-    discordBot[Discord Bot] --cloudflare tunnel--- webApi["Web API (Hono)"]
-    webApi["Web API (Hono)"] --ORM: Prisma--- db["Database (RDBMS: MySQL)"]
-    subgraph bot
+    discordBot[Discord Bot] --- webApi["Web API (Hono)"]
+    webApi["Web API (Hono)"] --ORM: Prisma--- db["Database (RDBMS: PostgreSQL)"]
+    subgraph My PC
     discordBot
     end
-    subgraph backend
+    subgraph cloudflare workers
     webApi
+    end
+    subgraph CockroachDB
     db
     end
 ```
@@ -38,49 +44,15 @@ flowchart LR;
 
 -   yarn
 
-## Setup
+### `.env`ファイルの生成
 
-### windows ユーザー
-
-> [!CAUTION]
-> 以下のコマンドたちを実際に実行して試していないので、ご注意ください。
+### Windows ユーザー
 
 ```batch
 make-env.cmd
-cd bot
-yarn
-cd ..
-cd backend
-yarn
-#データベースに関する情報を適宜書き換える
-yarn migrate
 ```
 
 ### Linux ユーザー
-
-> [!CAUTION]
-> 以下のコマンドたちを実際に実行して試していないので、ご注意ください。
-
-```shell
-sh make-env.sh
-cd bot
-yarn
-cd ..
-cd backend
-yarn
-#データベースに関する情報を適宜書き換える
-yarn migrate
-```
-
-### `.env`ファイルの生成
-
-### Batchfile
-
-```batch
-make-env.cmd
-```
-
-### Shell
 
 > [!CAUTION]
 > Linux 環境で実行した際の動作の確認をしていないため正しく動作しない可能性があります。
@@ -154,8 +126,10 @@ CLOUDFLARE_TUNNEL_TOKEN=
 erDiagram
     User ||--|{ Debt : lend
     User ||--|{ Debt : borrow
+    Debt ||--|| DebtRecordId : autoincrement
     User {
-        String discordId PK, UK "@id @unique"
+        BigInt cockroachdbId PK "@id @default(autoincrement())"
+        String discordId UK "@unique"
         String discordName
         DateTime createdAt "@default(now())"
         DateTime updatedAt "@updatedAt"
@@ -163,23 +137,22 @@ erDiagram
         Debt debtBorrow "@relation('Borrow')"
     }
     Debt {
-        Int id PK, UK "@id @default(autoincrement())"
+        BigInt cockroachdbId PK "@id @default(autoincrement())"
         Int money
         Boolean isPayOff
         DateTime createdAt "@default(now())"
         DateTime updatedAt "@updatedAt"
         String lendId FK "@relation(name: 'Lend', fields: [lendId], references: [discordId])"
         String borrowId FK "@relation(name: 'Borrow', fields: [borrowId], references: [discordId])"
+        BigInt id FK, UK "@relation(fields: [id], references: [id]) @unique"
+    }
+    DebtRecordId {
+        BigInt cockroachdbId PK "@id @default(autoincrement())"
+        BigInt id UK "@unique"
+        Tag tag "'LATEST' or 'OLD'"
+        Debt debt　"actually Debt?"
     }
 ```
-
-## WebAPI のオリジン
-
-http://127.0.0.1:3000
-
-## Prisma Studio のオリジン
-
-http://127.0.0.2:5555
 
 ## Web API のエンドポイント
 
@@ -203,20 +176,12 @@ http://127.0.0.2:5555
 
 -   誰にどれくらい借金をしているかについての情報を返すエンドポイント
 
-# docker
+# bot のセットアップ
 
-## 開発時
-
-```shell
-docker compose -f dev.docker-compose.yaml up -d
-docker compose -f dev.docker-compose.yaml exec -it debtbot-backend npx prisma migrate dev --name init
-```
-
-## リリース時
+※ bot のコンテナのみ存在する
 
 ```shell
-docker compose -f prod.docker-compose.yaml up -d
-docker compose -f prod.docker-compose.yaml exec -it debtbot-backend npx prisma migrate dev --name init
+docker compose up -d
 ```
 
 ### 参考文献

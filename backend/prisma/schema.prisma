@@ -1,35 +1,45 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider  = "cockroachdb"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
-  discordId       String   @id @unique
+  cockroachdbId   BigInt   @id @default(autoincrement())
+  discordId       String   @unique
   discordUsername String
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
-  debtLend        Debt[]   @relation("Lend")
   debtBorrow      Debt[]   @relation("Borrow")
+  debtLend        Debt[]   @relation("Lend")
 }
 
 model Debt {
-  id        Int      @id @default(autoincrement())
-  money     Int
-  isPayOff  Boolean
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  lend      User     @relation(name: "Lend", fields: [lendId], references: [discordId])
-  lendId    String
-  borrow    User     @relation(name: "Borrow", fields: [borrowId], references: [discordId])
-  borrowId  String
+  cockroachdbId  BigInt       @id @default(autoincrement())
+  money          Int
+  isPayOff       Boolean
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  lendId         String
+  borrowId       String
+  id             BigInt       @unique
+  borrow         User         @relation("Borrow", fields: [borrowId], references: [discordId])
+  sampleRecordId DebtRecordId @relation(fields: [id], references: [id])
+  lend           User         @relation("Lend", fields: [lendId], references: [discordId])
+}
+
+model DebtRecordId {
+  cockroachdbId BigInt @id @default(autoincrement())
+  id            BigInt @unique
+  tag           Tag
+  debt          Debt?
+}
+
+enum Tag {
+  LATEST
+  OLD
 }
