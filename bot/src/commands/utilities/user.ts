@@ -17,9 +17,9 @@ import { checkIsString } from '../../types';
 
 dotenv.config();
 
-const registerUrl = checkIsString(process.env.REGISTERURL);
-const deleteUrl = checkIsString(process.env.DELETEURL);
-const guildId = checkIsString(process.env.GUILDID);
+const registerUrl: string = checkIsString(process.env.REGISTERURL);
+const deleteUrl: string = checkIsString(process.env.DELETEURL);
+const guildId: string = checkIsString(process.env.GUILDID);
 
 const registerUser = {
     data: new SlashCommandBuilder().setName('register-user').setDescription('ユーザー登録ができます。'),

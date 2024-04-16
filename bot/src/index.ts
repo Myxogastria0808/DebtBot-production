@@ -2,8 +2,11 @@ import { CacheType, Interaction, GatewayIntentBits, Client, Events } from 'disco
 import dotenv from 'dotenv';
 import { registerUser, deleteUser } from './commands/utilities/user';
 import { createDebt, amountDebt } from './commands/utilities/debt';
+import { checkIsString } from './types/index';
 
 dotenv.config();
+
+const token: string = checkIsString(process.env.TOKEN);
 
 const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMessageReactions],
@@ -94,4 +97,4 @@ client.on(Events.InteractionCreate, async (interaction: Interaction<CacheType>) 
     }
 });
 
-client.login(process.env.TOKEN);
+client.login(token);

@@ -5,8 +5,8 @@ import { amountDebtAuthorizationDataType, createDebtAuthorizationDataType } from
 
 dotenv.config();
 
-const guildId = checkIsString(process.env.GUILDID);
-const webApiUrl = checkIsString(process.env.WEBAPIURL);
+const guildId: string = checkIsString(process.env.GUILDID);
+const webApiUrl: string = checkIsString(process.env.WEBAPIURL);
 
 const createDebt = {
     data: new SlashCommandBuilder()
