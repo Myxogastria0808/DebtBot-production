@@ -8,7 +8,7 @@ dotenv.config();
 
 const token: string = checkIsString(process.env.TOKEN);
 
-const client = new Client({
+const client: Client<boolean> = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMessageReactions],
 });
 
