@@ -30,3 +30,10 @@ if not exist %~dp0backend\.dev.vars (
 ) else (
     echo backend\.dev.vars is already exits.
 )
+
+if not exist %~dp0backend\.env (
+    echo DATABASE_URL = "">> ./backend/.env
+    echo DIRECT_URL = "">> ./backend/.env
+) else (
+    echo backend\.env is already exits.
+)

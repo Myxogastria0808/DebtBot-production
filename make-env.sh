@@ -13,7 +13,8 @@ CURRENT=$(
 )
 
 BOTPATH="${CURRENT}/bot/.env"
-BACKENDPATH="${CURRENT}/backend/.dev.vars"
+BACKENDPATH_DEV_VARS="${CURRENT}/backend/.dev.vars"
+BACKENDPATH_ENV="${CURRENT}/backend/.env"
 
 if [ ! -e $BOTPATH ]; then
     touch $BOTPATH
@@ -29,9 +30,9 @@ else
     echo bot/.env is already exits.
 fi
 
-if [ ! -e $BACKENDPATH ]; then
-    touch $BACKENDPATH
-    cat <<EOT >$BACKENDPATH
+if [ ! -e $BACKENDPATH_DEV_VARS ]; then
+    touch $BACKENDPATH_DEV_VARS
+    cat <<EOT >$BACKENDPATH_DEV_VARS
 DOMAIN = ""
 CLIENTID = ""
 CLIENTSECRET = ""
@@ -41,4 +42,14 @@ DIRECT_URL = ""
 EOT
 else
     echo backend/.dev.vars is already exits.
+fi
+
+if [ ! -e $BACKENDPATH_ENV ]; then
+    touch $BACKENDPATH_ENV
+    cat <<EOT >$BACKENDPATH_ENV
+DATABASE_URL = ""
+DIRECT_URL = ""
+EOT
+else
+    echo backend/.env is already exits.
 fi

@@ -92,6 +92,20 @@ DATABASE_URL = ""
 DIRECT_URL = ""
 ```
 
+### backend に置く`.env`ファイルの中身
+
+> [!NOTE]
+> 空の文字列(または数字)に適切な情報を入力してください。
+
+> [!CAUTION]
+> 　`.env`ファイルに書く内容は、外部に漏れてはいけない内容を含むので、必ず`.gitignore`ファイルに`.env`を書いてください。
+
+```.env
+DATABASE_URL = ""
+DIRECT_URL = ""
+
+```
+
 ## DebtBot のテーブル設計
 
 ```mermaid
