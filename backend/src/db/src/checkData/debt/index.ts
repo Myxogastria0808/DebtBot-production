@@ -3,7 +3,11 @@ import { PrismaClient } from '@prisma/client/edge';
 const prisma = new PrismaClient();
 
 const findAllDebt = async () => {
-    const debt = await prisma.debt.findMany();
+    const debt = await prisma.debt.findMany({
+        where: {
+            isPayOff: false,
+        },
+    });
     console.log(debt);
 };
 
@@ -12,4 +16,16 @@ const findAllDebtRecordId = async () => {
     console.log(debtRecordId);
 };
 
-export { findAllDebt, findAllDebtRecordId };
+const changePayOff = async (id: number) => {
+    const debt = await prisma.debt.update({
+        where: {
+            id,
+        },
+        data: {
+            isPayOff: true,
+        },
+    });
+    console.log(debt);
+};
+
+export { findAllDebt, findAllDebtRecordId, changePayOff };
