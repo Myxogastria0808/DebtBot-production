@@ -15,7 +15,7 @@
         "hono": "^4.4.6"
     },
     "devDependencies": {
-        "@cloudflare/workers-types": "^4.20240614.0",
+        "@cloudflare/workers-types": "^4.20240620.0",
         "@types/node": "^20.14.2",
         "prisma": "^5.14.0",
         "ts-node-dev": "^2.0.0",
