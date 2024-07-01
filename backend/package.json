@@ -9,7 +9,7 @@
         "migrate": "prisma migrate dev --name init && prisma generate"
     },
     "dependencies": {
-        "@prisma/client": "^5.15.1",
+        "@prisma/client": "^5.16.1",
         "@types/dotenv": "^8.2.0",
         "dotenv": "^16.4.5",
         "hono": "^4.4.8"
