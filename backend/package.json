@@ -21,6 +21,6 @@
         "ts-node-dev": "^2.0.0",
         "tsx": "^4.15.7",
         "typescript": "^5.4.5",
-        "wrangler": "^3.61.0"
+        "wrangler": "^3.62.0"
     }
 }
